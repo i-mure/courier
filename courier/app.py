@@ -8,7 +8,7 @@ from .errors import CourierRequestError
 
 class Messenger:
     """
-        Class that represents a singleton used to send messages to the Facebook API
+    Class that represents a singleton used to send messages to the Facebook API
 
     """
 
@@ -34,10 +34,10 @@ class Messenger:
 
     def send(self, payload):
         """
-            send() : takes a payload and sends it to the API
-                     returns tuple of (HTTP_STATUS_CODE, HTTP_STATUS_TEXT)
+        send() : takes a payload and sends it to the API
+                 returns tuple of (HTTP_STATUS_CODE, HTTP_STATUS_TEXT)
 
-            payload: message should be propery formatted JSON dict/string
+        payload: message should be propery formatted JSON dict/string
 
         """
         try:
@@ -50,7 +50,7 @@ class Messenger:
 
     def get_user_profile(self, fbid):
         """
-            returns a tuple of the status code and a dict of the user (HTTP_STATUS_CODE, user)
+        returns a tuple of the status code and a dict of the user (HTTP_STATUS_CODE, user)
             
         """
         url = self.user_url % fbid
