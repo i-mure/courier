@@ -14,4 +14,4 @@ FB_SETTINGS_URL = "https://graph.facebook.com/v2.8/me/thread_settings?access_tok
 
 # HEADERS
 
-HEADERS_JSON = {'headers': 'application/json'}
+HEADERS_JSON = {'Content-Type': 'application/json'}
