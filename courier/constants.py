@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
 """
 
 This file contains all the constant variables used throughout the application
