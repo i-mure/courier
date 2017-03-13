@@ -32,7 +32,7 @@ class Messenger:
         self._token = value
 
 
-    def send(self, payload):
+    def send(self, fbid, payload):
         """
         send() : takes a payload and sends it to the API
                  returns tuple of (HTTP_STATUS_CODE, HTTP_STATUS_TEXT)

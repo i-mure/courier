@@ -38,6 +38,7 @@ class QuickReply:
 	def to_json(self):
 		return {'content_type': 'text', 'title': self.reply_title, 'payload': self.reply_payload}
 
+
 class QuickReplyImage:
 	"""
 	Creates a quick reply element  with an image
