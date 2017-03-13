@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
+
 import logging
 import requests
 
 
 from .constants import FB_URL,FB_USER_URL, HEADERS_JSON
-
+from ,errors import CourierRequestError
 
 class Messenger:
 	"""
@@ -41,9 +43,9 @@ class Messenger:
 		try:
 			status = requests.post(self.post_url, data=payload, headers=HEADERS_JSON)
 		except requests.exceptions.RequestException as e:
-			raise e
-
-		return (status.status_code, status.text)
+			raise CourierRequestError(str(e))
+		finally:
+			return (status.status_code, status.text)
 
 
 	def get_user_profile(fbid):
@@ -55,9 +57,9 @@ class Messenger:
 	    try:
 		    status = requests.get(url)
 		except requests.exceptions.RequestException as e:
-			raise e
-
-	    return (status.status_code, status.json())
+			raise CourierRequestError(str(e))
+		finally:
+		    return (status.status_code, status.json())
 
 
 
