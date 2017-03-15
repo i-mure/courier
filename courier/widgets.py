@@ -129,7 +129,7 @@ class DefaultAction:
 
 class ReceiptItem:
 	"""
-		This class repressents the goods which have been sold in the receipt
+		This class repressents the goods which have been sold in the order
 	"""
 
 	def __init__(self, title, price, quantity = None,currency = None, subtitle = None,
@@ -154,7 +154,7 @@ class ReceiptItem:
 
 class Address:
 	"""
-		Repressents the address of the buyer of an item
+		Shipping address: Repressents the address of the buyer of an item
 	"""
 	def __init__(self, street_1, city, postal_code, state, country, street_2 = None):
 		self.street_1 = street_1
@@ -174,5 +174,36 @@ class Address:
 		return json
 
 
+class Summary:
+	"""
+		Payment summary: Repressents a brief description of a transaction
+	"""
 
+	def __init__(self, total_cost, subtotal = None, shipping_cost = None, total_tax = None):
+		self.total_cost = total_cost
+		self.subtotal = subtotal
+		self.shipping_cost = shipping_cost
+		self.total_tax = total_tax
 
+	def to_json(self):
+		json = {
+			"total_cost": self.total_cost
+		}
+		if self.subtotal is not None: json["subtotal"] = [self.subtotal]
+		if self.shipping_cost is not None: json["shipping_cost"] = self.shipping_cost
+		if self.total_cost is not None: json["image_url"] = self.total_cost
+		return json
+
+class Adjustment:
+	"""
+		Payment adjustments: allow a way to insert adjusted pricing (e.g., sales). Adjustments are optional
+	"""
+	def __init__(self, name, amount):
+		self.name = name
+		self.amount = amount
+
+	def to_json(self):
+		return {
+			"name": self.name,
+			"amount": self.amount
+		}
