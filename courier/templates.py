@@ -26,7 +26,7 @@ class GenericTemplate:
 					'item_url': self.item_url,
 					'image_url': self.image_url,
 					'subtitle': self.subtitle,
-					'buttons': buttons
+					'buttons': self.buttons
 				}]
 			}
 		}
@@ -37,7 +37,7 @@ class ButtonTemplate:
 	"""
 
 	def __init__(self, text, buttons):
-		self.title = title
+		self.text = text
 		self.buttons = buttons
 
 	def to_json(self):
