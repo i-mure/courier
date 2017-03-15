@@ -51,3 +51,29 @@ class ButtonTemplate:
 				}
 			}
 		}
+
+class ListTemplate:
+	"""
+	List template
+	"""
+
+	def __init__(self, text, list_items, button = None, top_element_style = None):
+		self.text = text
+		self.list_items = list_items
+		self.button = button
+		self.top_element_style = top_element_style
+
+	def to_json(self):
+		json = {
+			'attachment': {
+				'type': 'template',
+				'payload': {
+					'template_type': 'list',
+					'elements': self.list_items,
+					'buttons': [self.button]
+				}
+			}
+		}
+		if self.button is not None: json["buttons"] = [self.button]
+		if self.top_element_style is not None: json["top_element_style"] = self.top_element_style
+		return json

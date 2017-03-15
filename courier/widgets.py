@@ -24,7 +24,7 @@ class ButtonShare:
 		pass
 
 	def to_json(self):
-	    return {'type': 'element_share'}
+		return {'type': 'element_share'}
 
 
 class QuickReply:
@@ -56,6 +56,7 @@ class QuickLocation:
 	Creates a quick reply location getter element 
 	"""
 	def __init__(self):
+		pass
 
 	def to_json(self):
 		return {'content_type': 'location'}
@@ -74,3 +75,54 @@ class SenderAction:
 		return {'sender_action': self.action}
 
 
+class ListItem:
+	""""
+		Standard widget for items in a list template
+	"""
+	def __init__(self, title, subtitle = None, default_action = None, button = None,
+				 image_url = None):
+		self.title = title
+		self.subtitle = subtitle
+		self.default_action = default_action
+		self.button = button
+		self.image_url = image_url
+
+
+	def to_json(self):
+		json = {
+			"title": self.title
+		}
+		if self.subtitle is not None: json["subtitle"] = self.subtitle
+		if self.default_action is not None: json["default_action"] = self.default_action
+		if self.button is not None: json["button"] = [self.button]
+		if self.image_url is not None: json["image_url"] = self.image_url
+		return json
+
+
+class DefaultAction:
+	""""
+		Adds clickable events to various widgets
+    """
+	TYPE_WEB_URL = "web_url"
+	WEB_HEIGHT_TALL = "tall"
+
+	def __init__(self, type, url = None, messenger_extensions = True,
+				 web_view_ratio = TYPE_WEB_URL, fallback_url = None):
+		self.type = type
+		self.url = url
+		self.messenger_extensions = messenger_extensions
+		self.web_view_ratio = web_view_ratio
+		self.fallback_url = fallback_url
+
+
+	def to_json(self):
+		json = {
+			"type": self.type,
+			"messenger_extensions": self.messenger_extensions,
+			"webview_height_ratio": self.web_view_ratio
+		}
+		if self.type == self.TYPE_WEB_URL :
+			json["url"] = self.url
+			json["fallback_url"] = self.fallback_url if self.fallback_url is not None else self.url
+
+		return json
