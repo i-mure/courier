@@ -126,3 +126,53 @@ class DefaultAction:
 			json["fallback_url"] = self.fallback_url if self.fallback_url is not None else self.url
 
 		return json
+
+class ReceiptItem:
+	"""
+		This class repressents the goods which have been sold in the receipt
+	"""
+
+	def __init__(self, title, price, quantity = None,currency = None, subtitle = None,
+				 image_url = None):
+		self.title = title
+		self.subtitle = subtitle
+		self.quantity = quantity
+		self.price = price
+		self.currency = currency
+		self.image_url = image_url
+
+	def to_json(self):
+		json = {
+			"title": self.title,
+			"price": self.price
+		}
+		if self.subtitle is not None: json["subtitle"] = self.subtitle
+		if self.quantity is not None: json["quantity"] = [self.quantity]
+		if self.currency is not None: json["currency"] = self.currency
+		if self.image_url is not None: json["image_url"] = self.image_url
+		return json
+
+class Address:
+	"""
+		Repressents the address of the buyer of an item
+	"""
+	def __init__(self, street_1, city, postal_code, state, country, street_2 = None):
+		self.street_1 = street_1
+		self.street_2 = street_2
+		self.postal_code = postal_code
+		self.state = state
+		self.country = country
+
+	def to_json(self):
+		json = {
+			"street_1": self.street_1,
+			"postal_code": self.postal_code,
+			"state": self.state,
+			"country": self.country
+		}
+		if self.street_2 is not None: json["street_2"] = self.street_2
+		return json
+
+
+
+
