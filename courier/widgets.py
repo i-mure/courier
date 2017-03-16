@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from enum import Enum
 
 class Button:
 	"""
@@ -311,12 +311,133 @@ class Airport:
         An object repressenting an actual airport
     """
 
-	def __init__(self, airport_code, city):
+	def __init__(self, airport_code, city, terminal = None, gate = None):
 		self.airport_code = airport_code
 		self.city = city
+		self.terminal = terminal
+		self.gate = gate
 
 	def to_json(self):
-		return {
+		json =  {
 			"airport_code": self.airport_code,
 			"city": self.city
 		}
+		if self.terminal is not None: json["terminal"] = self.terminal
+		if self.gate is not None: json["qr_code"] = self.gate
+		return json
+
+class PassengerInfo:
+	"""Information unique to passenger/segment pair
+	"""
+
+
+	def __init__(self, passenger_id, name, ticket_number = None):
+		self.passenger_id = passenger_id
+		self.name = name
+		self.ticket_number = ticket_number
+
+
+	def to_json(self):
+		json = {
+			"passenger_id": self.passenger_id,
+			"name": self.name
+		}
+		if self.ticket_number is not None: json["ticket_number"] = self.ticket_number
+		return json
+
+
+class IteneraryFlightInfo:
+	"""
+		Boarding passes for passengers
+	"""
+
+	class TravelClass(Enum):
+		economy = "economy"
+		business = "business"
+		first_class = "first_class"
+
+
+	def __init__(self,connection_id, segment_id, flight_number, departure_airport: Airport, arrival_airport: Airport,
+				 flight_schedule: FlightSchedule, travel_class: TravelClass, aircraft_type: None):
+		self.connection_id = connection_id
+		self.segment_id = segment_id
+		self.flight_number = flight_number
+		self.departure_airport = departure_airport
+		self.arrival_airport = arrival_airport
+		self.flight_schedule = flight_schedule
+		self.travel_class = travel_class
+		self.aircraft_type = aircraft_type
+
+
+	def to_json(self):
+		json =  {
+			"connection_id": self.connection_id,
+			"segment_id": self.segment_id,
+			"flight_number": self.flight_number,
+			"departure_airport": self.departure_airport,
+			"arrival_airport": self.arrival_airport,
+			"flight_schedule": self.flight_schedule,
+			"travel_class": self.travel_class
+		}
+		if self.aircraft_type is not None: json["aircraft_type"] = self.aircraft_type
+		return json
+
+
+class ProductInfo(object):
+	"""List of products the passenger purchased
+	"""
+
+	def __init__(self, title, value):
+		self.title = title
+		self.value = value
+
+	def to_json(self):
+		return {
+			"label": self.title,
+			"value": self.value
+		}
+
+
+class PassengerSegmentInfo:
+	"""
+		Information unique to passenger/segment pair
+	"""
+	class TravelClass(Enum):
+		economy = "economy"
+		business = "business"
+		first_class = "first_class"
+
+	def __init__(self, segment_id, passenger_id, seat, seat_type, product_info: list[ProductInfo]):
+		self.segment_id = segment_id
+		self.passenger_id = passenger_id
+		self.seat = seat
+		self.seat_type = seat_type
+		self.product_info = product_info
+
+
+	def to_json(self):
+		json =  {
+			"segment_id": self.segment_id,
+			"passenger_id": self.passenger_id,
+			"seat": self.seat,
+			"seat_type": self.seat_type
+		}
+		if self.product_info is not None: json["product_info"] = self.product_info
+		return json
+
+class PriceInfo(object):
+	"""Itemization of the total price
+	"""
+
+	def __init__(self, title, amount, currency = None):
+		self.title = title
+		self.amount = amount
+		self.currency = currency
+
+	def to_json(self):
+		json = {
+			"label": self.title,
+			"value": self.value
+		}
+		if self.currency is not None: json["currency"] = self.currency
+		return json

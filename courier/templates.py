@@ -153,7 +153,7 @@ class AirlineCheckinReminderTemplate:
     """
 
 	def __init__(self, intro_message, locale, pnr_number, flight_info: list[FlightInfo],
-				 checkin_url, theme_color):
+				 checkin_url, theme_color = None):
 		self.intro_message = intro_message
 		self.locale = locale
 		self.pnr_number = pnr_number
@@ -175,5 +175,51 @@ class AirlineCheckinReminderTemplate:
 				}
 			}
 		}
+		if self.theme_color is not None: json["payload"]["theme_color"] = self.theme_color
+		return json
+
+
+class AirlineItineraryTemplate:
+	"""Send a confirmation message that contains the itinerary and receipt.
+    """
+
+	def __init__(self, intro_message, locale, pnr_number, passenger_info: list[PassengerInfo],
+				 flight_info: list[IteneraryFlightInfo], passenger_segment_info: list[PassengerSegmentInfo],
+				 total_price, currency, price_info: list[PriceInfo] = None, base_price = None, tax = None,
+				 theme_color = None):
+		self.intro_message = intro_message
+		self.locale = locale
+		self.pnr_number = pnr_number
+		self.passenger_info = passenger_info
+		self.passenger_segment_info = passenger_segment_info
+		self.total_price = total_price
+		self.currency = currency
+		self.price_info = price_info
+		self.base_price = base_price
+		self.tax = tax
+		self.flight_info = flight_info
+		self.theme_color = theme_color
+
+	def to_json(self):
+		json = {
+			"attachement": {
+				"type": "template",
+				"payload": {
+					"template_type": "airline_itinerary",
+					"intro_message": self.intro_message,
+					"locale": self.locale,
+					"pnr_number": self.pnr_number,
+					"passenger_info": self.passenger_info,
+					"flight_info": self.flight_info,
+					"passenger_segment_info": self.passenger_segment_info,
+					"total_price": self.total_price,
+					"currency": self.currency,
+					"boarding_pass": self.flight_info
+				}
+			}
+		}
+		if self.price_info is not None: json["payload"]["price_info"] = self.price_info
+		if self.base_price is not None: json["payload"]["base_price"] = self.base_price
+		if self.tax is not None: json["payload"]["tax"] = self.tax
 		if self.theme_color is not None: json["payload"]["theme_color"] = self.theme_color
 		return json
