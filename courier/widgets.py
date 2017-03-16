@@ -207,3 +207,116 @@ class Adjustment:
 			"name": self.name,
 			"amount": self.amount
 		}
+
+class BoardingPass:
+	"""
+		Boarding passes for passengers
+	"""
+	def __init__(self, passenger_name, pnr_number, logo_image_url, flight_info: FlightInfo,
+				 travel_class = None, seat = None,  auxiliary_fields: list[Field] = None,
+				 secondary_fields: list[Field] = None, header_text_field = None,
+				 header_image_url = None, qr_code = None, barcode_image_url = None,
+				 above_bar_code_image_url = None):
+		self.passenger_name = passenger_name
+		self.pnr_number = pnr_number
+		self.travel_class = travel_class
+		self.seat = seat
+		self.auxiliary_fields = auxiliary_fields
+		self.secondary_fields = secondary_fields
+		self.logo_image_url = logo_image_url
+		self.header_image_url = header_image_url
+		self.header_text_field = header_text_field
+		self.qr_code = qr_code
+		self.barcode_image_url = barcode_image_url
+		self.above_bar_code_image_url = above_bar_code_image_url
+		self.flight_info = flight_info
+
+
+	def to_json(self):
+		json = {
+			"passenger_name": self.passenger_name,
+			"pnr_number": self.pnr_number,
+			"logo_image_url": self.logo_image_url,
+			"flight_info": self.flight_info
+		}
+
+		if self.travel_class is not None: json["travel_class"] = [self.travel_class]
+		if self.seat is not None: json["seat"] = self.seat
+		if self.auxiliary_fields is not None: json["auxiliary_fields"] = self.auxiliary_fields
+		if self.secondary_fields is not None: json["secondary_fields"] = self.secondary_fields
+		if self.header_image_url is not None: json["header_image_url"] = self.header_image_url
+		if self.header_text_field is not None: json["header_text_field"] = self.header_text_field
+		if self.qr_code is not None: json["qr_code"] = self.qr_code
+		if self.barcode_image_url is not None: json["barcode_image_url"] = self.barcode_image_url
+		if self.above_bar_code_image_url is not None: json["above_bar_code_image_url"] = self.above_bar_code_image_url
+		return json
+
+
+class FlightInfo:
+	"""
+		Boarding passes for passengers
+	"""
+	def __init__(self, flight_number, departure_airport: Airport, arrival_airport: Airport,
+				 flight_schedule: FlightSchedule):
+		self.flight_number = flight_number
+		self.departure_airport = departure_airport
+		self.arrival_airport = arrival_airport
+		self.flight_schedule = flight_schedule
+
+
+	def to_json(self):
+		return {
+			"flight_number": self.flight_number,
+			"departure_airport": self.departure_airport,
+			"arrival_airport": self.arrival_airport,
+			"flight_schedule": self.flight_schedule
+		}
+
+
+class FlightSchedule:
+	"""
+		Schedule for the flight
+	"""
+	def __init__(self, boarding_time, departure_time, arrival_time):
+		self.boarding_time = boarding_time
+		self.departure_time = departure_time
+		self.arrival_time = arrival_time
+
+
+	def to_json(self):
+		return {
+			"boarding_time": self.boarding_time,
+			"departure_time": self.departure_time,
+			"arrival_time": self.arrival_time
+		}
+
+
+class Field:
+	"""
+        An object for holding an object with labels and values
+    """
+
+	def __init__(self, label, value):
+		self.label = label
+		self.value = value
+
+	def to_json(self):
+		return {
+			"label": self.label,
+			"value": self.value
+		}
+
+class Airport:
+	"""
+        An object repressenting an actual airport
+    """
+
+	def __init__(self, airport_code, city):
+		self.airport_code = airport_code
+		self.city = city
+
+	def to_json(self):
+		return {
+			"airport_code": self.airport_code,
+			"city": self.city
+		}
