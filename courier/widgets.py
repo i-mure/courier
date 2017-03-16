@@ -1,5 +1,23 @@
 # -*- coding: utf-8 -*-
 
+class CourierWidget:
+	pass
+
+class Message(CourierWidget):
+
+	def __init__(self, fbid, message):
+		self.fbid = fbid
+		self.message = message
+
+	def to_json(self):
+		return {
+			'recipient': {
+				'id': self.fbid
+			},
+			'message': {
+				'text': self.message
+			}
+		}
 
 class Button:
 	"""

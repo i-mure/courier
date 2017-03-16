@@ -2,6 +2,7 @@
 import logging
 import requests
 
+from json import dumps
 
 from .constants import FB_URL,FB_USER_URL, HEADERS_JSON
 from .errors import CourierRequestError
@@ -32,7 +33,7 @@ class Messenger:
         self._token = value
 
 
-    def send(self, fbid, payload):
+    def send(self, payload):
         """
         send() : takes a payload and sends it to the API
                  returns tuple of (HTTP_STATUS_CODE, HTTP_STATUS_TEXT)
@@ -40,6 +41,7 @@ class Messenger:
         payload: message should be propery formatted JSON dict/string
 
         """
+        if hasattr(payload, 'to_json'): payload = dumps(payload.to_json())
         try:
             status = requests.post(self.post_url, data=payload, headers=HEADERS_JSON)
         except requests.exceptions.RequestException as e:
