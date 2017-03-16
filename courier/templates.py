@@ -169,7 +169,7 @@ class AirlineCheckinReminderTemplate:
 					"template_type": "airline_checkin",
 					"intro_message": self.intro_message,
 					"locale": self.locale,
-					"checkin_url": self.checkin_url
+					"checkin_url": self.checkin_url,
 					"pnr_number": self.pnr_number,
 					"boarding_pass": self.flight_info
 				}
