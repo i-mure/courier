@@ -1,3 +1,5 @@
+from .widgets import *
+
 """
 Generic templates to send 
 """
@@ -70,13 +72,12 @@ class ListTemplate:
 				'type': 'template',
 				'payload': {
 					'template_type': 'list',
-					'elements': self.list_items,
-					'buttons': [self.button]
+					'elements': self.list_items
 				}
 			}
 		}
-		if self.button is not None: json["buttons"] = [self.button]
-		if self.top_element_style is not None: json["top_element_style"] = self.top_element_style
+		if self.button is not None: json["payload"]["buttons"] = [self.button]
+		if self.top_element_style is not None: json["payload"]["top_element_style"] = self.top_element_style
 		return json
 
 
@@ -111,10 +112,38 @@ class ReceiptTemplate:
 				}
 			}
 		}
-		if self.merchant_name is not None: json["merchant_name"] = self.merchant_name
-		if self.timestamp is not None: json["timestamp"] = self.timestamp
-		if self.order_url is not None: json["order_url"] = self.order_url
-		if self.elements is not None: json["elements"] = self.elements
-		if self.address is not None: json["address"] = self.address
-		if self.adjustments is not None: json["adjustments"] = self.adjustments
+		if self.merchant_name is not None: json["payload"]["merchant_name"] = self.merchant_name
+		if self.timestamp is not None: json["payload"]["timestamp"] = self.timestamp
+		if self.order_url is not None: json["payload"]["order_url"] = self.order_url
+		if self.elements is not None: json["payload"]["elements"] = self.elements
+		if self.address is not None: json["payload"]["address"] = self.address
+		if self.adjustments is not None: json["payload"]["adjustments"] = self.adjustments
 		return json
+
+
+class AirlineBoardingPassTemplate:
+	"""Send a message that contains boarding passes for one or more flights or one more passengers
+    """
+
+	def __init__(self, intro_message, locale, boarding_pass: list[BoardingPass], theme_color):
+		self.intro_message = intro_message
+		self.locale = locale
+		self.boarding_pass = boarding_pass
+		self.theme_color = theme_color
+
+
+	def to_json(self):
+		json = {
+			"attachement":{
+				"type": "template",
+				"payload": {
+					"template_type": "template_type",
+					"intro_message": self.intro_message,
+					"locale": self.locale,
+					"boarding_pass": self.boarding_pass
+				}
+			}
+		}
+		if self.theme_color is not None: json["payload"]["theme_color"] = self.theme_color
+		return json
+
