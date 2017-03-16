@@ -223,3 +223,40 @@ class AirlineItineraryTemplate:
 		if self.tax is not None: json["payload"]["tax"] = self.tax
 		if self.theme_color is not None: json["payload"]["theme_color"] = self.theme_color
 		return json
+
+
+class AirlineFlightUpdateTemplate:
+	"""Send a check-in reminder message
+    """
+
+	class UpdateType(Enum):
+		gate_change = "gate_change"
+		delay = "delay"
+		cancellation = "cancellation"
+
+	def __init__(self, update_type: UpdateType, locale, pnr_number, update_flight_info: list[FlightInfo],
+				 theme_color = None, intro_message = None,):
+		self.intro_message = intro_message
+		self.locale = locale
+		self.pnr_number = pnr_number
+		self.update_type = update_type
+		self.update_flight_info = update_flight_info
+		self.theme_color = theme_color
+
+	def to_json(self):
+		json = {
+			"attachement": {
+				"type": "template",
+				"payload": {
+					"template_type": "airline_update",
+					"intro_message": self.intro_message,
+					"locale": self.locale,
+					"pnr_number": self.pnr_number,
+					"update_flight_info": self.update_flight_info,
+					"update_type": self.update_type
+				}
+			}
+		}
+		if self.theme_color is not None: json["payload"]["theme_color"] = self.theme_color
+		if self.intro_message is not None: json["payload"]["intro_message"] = self.intro_message
+		return json
