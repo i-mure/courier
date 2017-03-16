@@ -147,3 +147,33 @@ class AirlineBoardingPassTemplate:
 		if self.theme_color is not None: json["payload"]["theme_color"] = self.theme_color
 		return json
 
+
+class AirlineCheckinReminderTemplate:
+	"""Send a check-in reminder message
+    """
+
+	def __init__(self, intro_message, locale, pnr_number, flight_info: list[FlightInfo],
+				 checkin_url, theme_color):
+		self.intro_message = intro_message
+		self.locale = locale
+		self.pnr_number = pnr_number
+		self.checkin_url = checkin_url
+		self.flight_info = flight_info
+		self.theme_color = theme_color
+
+	def to_json(self):
+		json = {
+			"attachement": {
+				"type": "template",
+				"payload": {
+					"template_type": "airline_checkin",
+					"intro_message": self.intro_message,
+					"locale": self.locale,
+					"checkin_url": self.checkin_url
+					"pnr_number": self.pnr_number,
+					"boarding_pass": self.flight_info
+				}
+			}
+		}
+		if self.theme_color is not None: json["payload"]["theme_color"] = self.theme_color
+		return json
