@@ -125,7 +125,7 @@ class AirlineBoardingPassTemplate:
 	"""Send a message that contains boarding passes for one or more flights or one more passengers
     """
 
-	def __init__(self, intro_message, locale, boarding_pass: list[BoardingPass], theme_color):
+	def __init__(self, intro_message, locale, boarding_pass: list, theme_color):
 		self.intro_message = intro_message
 		self.locale = locale
 		self.boarding_pass = boarding_pass
@@ -152,7 +152,7 @@ class AirlineCheckinReminderTemplate:
 	"""Send a check-in reminder message
     """
 
-	def __init__(self, intro_message, locale, pnr_number, flight_info: list[FlightInfo],
+	def __init__(self, intro_message, locale, pnr_number, flight_info: list,
 				 checkin_url, theme_color = None):
 		self.intro_message = intro_message
 		self.locale = locale
@@ -183,9 +183,9 @@ class AirlineItineraryTemplate:
 	"""Send a confirmation message that contains the itinerary and receipt.
     """
 
-	def __init__(self, intro_message, locale, pnr_number, passenger_info: list[PassengerInfo],
-				 flight_info: list[IteneraryFlightInfo], passenger_segment_info: list[PassengerSegmentInfo],
-				 total_price, currency, price_info: list[PriceInfo] = None, base_price = None, tax = None,
+	def __init__(self, intro_message, locale, pnr_number, passenger_info: list,
+				 flight_info: list, passenger_segment_info: list,
+				 total_price, currency, price_info: list = None, base_price = None, tax = None,
 				 theme_color = None):
 		self.intro_message = intro_message
 		self.locale = locale
@@ -234,7 +234,7 @@ class AirlineFlightUpdateTemplate:
 		delay = "delay"
 		cancellation = "cancellation"
 
-	def __init__(self, update_type: UpdateType, locale, pnr_number, update_flight_info: list[FlightInfo],
+	def __init__(self, update_type: UpdateType, locale, pnr_number, update_flight_info: list,
 				 theme_color = None, intro_message = None):
 		self.intro_message = intro_message
 		self.locale = locale
@@ -253,7 +253,7 @@ class AirlineFlightUpdateTemplate:
 					"locale": self.locale,
 					"pnr_number": self.pnr_number,
 					"update_flight_info": self.update_flight_info,
-					"update_type": self.update_type
+					"update_type": self.update_type.value
 				}
 			}
 		}
