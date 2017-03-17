@@ -235,7 +235,7 @@ class AirlineFlightUpdateTemplate:
 		cancellation = "cancellation"
 
 	def __init__(self, update_type: UpdateType, locale, pnr_number, update_flight_info: list[FlightInfo],
-				 theme_color = None, intro_message = None,):
+				 theme_color = None, intro_message = None):
 		self.intro_message = intro_message
 		self.locale = locale
 		self.pnr_number = pnr_number

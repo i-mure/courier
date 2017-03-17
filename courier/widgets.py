@@ -75,11 +75,27 @@ class SenderAction:
 		return {'sender_action': self.action}
 
 
+class DefaultAction:
+	""""
+		Adds clickable events to various widgets
+    """
+	TYPE_WEB_URL = "web_url"
+	WEB_HEIGHT_TALL = "tall"
+
+	def __init__(self, type, url = None, messenger_extensions = True,
+				 web_view_ratio = TYPE_WEB_URL, fallback_url = None):
+		self.type = type
+		self.url = url
+		self.messenger_extensions = messenger_extensions
+		self.web_view_ratio = web_view_ratio
+		self.fallback_url = fallback_url
+
+
 class ListItem:
 	""""
 		Standard widget for items in a list template
 	"""
-	def __init__(self, title, subtitle = None, default_action = None, button = None,
+	def __init__(self, title, subtitle = None, default_action: DefaultAction = None, button: Button = None,
 				 image_url = None):
 		self.title = title
 		self.subtitle = subtitle
@@ -99,22 +115,6 @@ class ListItem:
 		return json
 
 
-class DefaultAction:
-	""""
-		Adds clickable events to various widgets
-    """
-	TYPE_WEB_URL = "web_url"
-	WEB_HEIGHT_TALL = "tall"
-
-	def __init__(self, type, url = None, messenger_extensions = True,
-				 web_view_ratio = TYPE_WEB_URL, fallback_url = None):
-		self.type = type
-		self.url = url
-		self.messenger_extensions = messenger_extensions
-		self.web_view_ratio = web_view_ratio
-		self.fallback_url = fallback_url
-
-
 	def to_json(self):
 		json = {
 			"type": self.type,
@@ -126,6 +126,7 @@ class DefaultAction:
 			json["fallback_url"] = self.fallback_url if self.fallback_url is not None else self.url
 
 		return json
+
 
 class ReceiptItem:
 	"""
@@ -152,6 +153,7 @@ class ReceiptItem:
 		if self.image_url is not None: json["image_url"] = self.image_url
 		return json
 
+
 class Address:
 	"""
 		Shipping address: Repressents the address of the buyer of an item
@@ -160,6 +162,7 @@ class Address:
 		self.street_1 = street_1
 		self.street_2 = street_2
 		self.postal_code = postal_code
+		self.city = city
 		self.state = state
 		self.country = country
 
@@ -167,6 +170,7 @@ class Address:
 		json = {
 			"street_1": self.street_1,
 			"postal_code": self.postal_code,
+			"city": self.city
 			"state": self.state,
 			"country": self.country
 		}
@@ -194,6 +198,7 @@ class Summary:
 		if self.total_cost is not None: json["image_url"] = self.total_cost
 		return json
 
+
 class Adjustment:
 	"""
 		Payment adjustments: allow a way to insert adjusted pricing (e.g., sales). Adjustments are optional
@@ -208,13 +213,90 @@ class Adjustment:
 			"amount": self.amount
 		}
 
+
+class Airport:
+	"""
+        An object repressenting an actual airport
+    """
+
+	def __init__(self, airport_code, city, terminal = None, gate = None):
+		self.airport_code = airport_code
+		self.city = city
+		self.terminal = terminal
+		self.gate = gate
+
+	def to_json(self):
+		json =  {
+			"airport_code": self.airport_code,
+			"city": self.city
+		}
+		if self.terminal is not None: json["terminal"] = self.terminal
+		if self.gate is not None: json["qr_code"] = self.gate
+		return json
+
+
+class FlightSchedule:
+	"""
+		Schedule for the flight
+	"""
+	def __init__(self, boarding_time, departure_time, arrival_time):
+		self.boarding_time = boarding_time
+		self.departure_time = departure_time
+		self.arrival_time = arrival_time
+
+
+	def to_json(self):
+		return {
+			"boarding_time": self.boarding_time,
+			"departure_time": self.departure_time,
+			"arrival_time": self.arrival_time
+		}
+
+
+class FlightInfo:
+	"""
+		Boarding passes for passengers
+	"""
+	def __init__(self, flight_number, departure_airport: Airport, arrival_airport: Airport,
+				 flight_schedule: FlightSchedule):
+		self.flight_number = flight_number
+		self.departure_airport = departure_airport
+		self.arrival_airport = arrival_airport
+		self.flight_schedule = flight_schedule
+
+
+	def to_json(self):
+		return {
+			"flight_number": self.flight_number,
+			"departure_airport": self.departure_airport,
+			"arrival_airport": self.arrival_airport,
+			"flight_schedule": self.flight_schedule
+		}
+
+
+class Field:
+	"""
+        An object for holding an object with labels and values
+    """
+
+	def __init__(self, label, value):
+		self.label = label
+		self.value = value
+
+	def to_json(self):
+		return {
+			"label": self.label,
+			"value": self.value
+		}
+
+
 class BoardingPass:
 	"""
 		Boarding passes for passengers
 	"""
 	def __init__(self, passenger_name, pnr_number, logo_image_url, flight_info: FlightInfo,
-				 travel_class = None, seat = None,  auxiliary_fields: list[Field] = None,
-				 secondary_fields: list[Field] = None, header_text_field = None,
+				 travel_class = None, seat = None,  auxiliary_fields: list = None,
+				 secondary_fields: list = None, header_text_field = None,
 				 header_image_url = None, qr_code = None, barcode_image_url = None,
 				 above_bar_code_image_url = None):
 		self.passenger_name = passenger_name
@@ -251,80 +333,6 @@ class BoardingPass:
 		if self.above_bar_code_image_url is not None: json["above_bar_code_image_url"] = self.above_bar_code_image_url
 		return json
 
-
-class FlightInfo:
-	"""
-		Boarding passes for passengers
-	"""
-	def __init__(self, flight_number, departure_airport: Airport, arrival_airport: Airport,
-				 flight_schedule: FlightSchedule):
-		self.flight_number = flight_number
-		self.departure_airport = departure_airport
-		self.arrival_airport = arrival_airport
-		self.flight_schedule = flight_schedule
-
-
-	def to_json(self):
-		return {
-			"flight_number": self.flight_number,
-			"departure_airport": self.departure_airport,
-			"arrival_airport": self.arrival_airport,
-			"flight_schedule": self.flight_schedule
-		}
-
-
-class FlightSchedule:
-	"""
-		Schedule for the flight
-	"""
-	def __init__(self, boarding_time, departure_time, arrival_time):
-		self.boarding_time = boarding_time
-		self.departure_time = departure_time
-		self.arrival_time = arrival_time
-
-
-	def to_json(self):
-		return {
-			"boarding_time": self.boarding_time,
-			"departure_time": self.departure_time,
-			"arrival_time": self.arrival_time
-		}
-
-
-class Field:
-	"""
-        An object for holding an object with labels and values
-    """
-
-	def __init__(self, label, value):
-		self.label = label
-		self.value = value
-
-	def to_json(self):
-		return {
-			"label": self.label,
-			"value": self.value
-		}
-
-class Airport:
-	"""
-        An object repressenting an actual airport
-    """
-
-	def __init__(self, airport_code, city, terminal = None, gate = None):
-		self.airport_code = airport_code
-		self.city = city
-		self.terminal = terminal
-		self.gate = gate
-
-	def to_json(self):
-		json =  {
-			"airport_code": self.airport_code,
-			"city": self.city
-		}
-		if self.terminal is not None: json["terminal"] = self.terminal
-		if self.gate is not None: json["qr_code"] = self.gate
-		return json
 
 class PassengerInfo:
 	"""Information unique to passenger/segment pair
@@ -407,7 +415,7 @@ class PassengerSegmentInfo:
 		business = "business"
 		first_class = "first_class"
 
-	def __init__(self, segment_id, passenger_id, seat, seat_type, product_info: list[ProductInfo]):
+	def __init__(self, segment_id, passenger_id, seat, seat_type, product_info: list):
 		self.segment_id = segment_id
 		self.passenger_id = passenger_id
 		self.seat = seat
@@ -425,7 +433,7 @@ class PassengerSegmentInfo:
 		if self.product_info is not None: json["product_info"] = self.product_info
 		return json
 
-class PriceInfo(object):
+class PriceInfo():
 	"""Itemization of the total price
 	"""
 
