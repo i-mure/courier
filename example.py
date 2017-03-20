@@ -7,7 +7,7 @@ from courier.app import Messenger, MessengerRequest
 from courier.widgets import Message, MessageWidget, Button, PostbackButton
 from courier.templates import ButtonTemplate
 
-bot = Messenger('EAAQgCWtPC68BABx8GsqZBwaASskv8fIpOZCcpZAN5pMmB1yihCLY3HHm3nt4HZCzTGZBFZAJ5E8bvttELSqIZCP8kM3I0pAn7gxShQRRzPpGj7oA0mbKzT1188hq0prcBoG8QWfHC6WZAIzQnfl4gyBwMZAlXhzh4H5xfmOmhErnGhwZDZD')
+bot = Messenger('<token>')
 
 app = Flask(__name__)
 
@@ -29,7 +29,7 @@ def webhook():
             home_buttons  = [PostbackButton('Home', payload='home_button'), PostbackButton('Exit', payload='exit_button')]
             home_template = ButtonTemplate(text='Habari Dunia', buttons=home_buttons)
 
-            code, text = bot.send(MessageWidget(fbid, home_template))
+            code, text = bot.send(MessageWidget(botRequest.fbid, home_template))
             print(code, text)
         except Exception as ex:
             print(ex)

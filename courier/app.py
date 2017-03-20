@@ -105,16 +105,17 @@ class MessengerRequest:
         self.is_message  = self.entry.get('message',  False)
 
         if self.is_referral:
-            self.message = entry['referral']['ref']
+            self.message = self.entry['referral']['ref']
 
         if self.is_postback:
-            self.message = entry['postback']['payload']
+            self.message = self.entry['postback']['payload']
 
         if self.is_message:
-            payload = self.entry[0]
+            payload = self.entry['message']
+
             if payload.get('attachments', False):
-                self.attachments   = entry['message']['attachments']
+                self.attachments   = self.entry['message']['attachments']
                 self.is_attachment = True
             else:
-                self.message = entry['message']['text']
+                self.message = self.entry['message']['text']
 
