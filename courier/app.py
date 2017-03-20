@@ -7,6 +7,20 @@ from json import dumps
 from .constants import FB_URL,FB_USER_URL, HEADERS_JSON
 from .errors import CourierRequestError
 
+def serialize_(payload):
+
+    if isinstance(payload, list):
+        payload = list(map(serialize_, payload))
+
+    if isinstance(payload, dict):
+        for item in payload:
+            payload[item] = serialize_(payload[item])
+
+    if hasattr(payload, 'to_json'):
+        payload = serialize_(payload.to_json())
+
+    return payload
+
 class Messenger:
     """
     Class that represents a singleton used to send messages to the Facebook API
@@ -33,7 +47,7 @@ class Messenger:
         self._token = value
 
 
-    def send(self, payload):
+    def send(self, obj):
         """
         send() : takes a payload and sends it to the API
                  returns tuple of (HTTP_STATUS_CODE, HTTP_STATUS_TEXT)
@@ -41,7 +55,11 @@ class Messenger:
         payload: message should be propery formatted JSON dict/string
 
         """
-        if hasattr(payload, 'to_json'): payload = dumps(payload.to_json())
+        # Serialize, dump to json and send back
+
+        payload = serialize_(obj)
+        payload = dumps(payload)
+
         try:
             status = requests.post(self.post_url, data=payload, headers=HEADERS_JSON)
         except requests.exceptions.RequestException as e:
