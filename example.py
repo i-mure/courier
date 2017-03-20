@@ -3,11 +3,11 @@ import os
 
 from flask import Flask, request
 
-from courier.app import Messenger
-from courier.widgets import Message, Button
+from courier.app import Messenger, MessengerRequest
+from courier.widgets import Message, MessageWidget, Button, PostbackButton
 from courier.templates import ButtonTemplate
 
-bot = Messenger(os.environ.get('FB_TOKEN'))
+bot = Messenger('EAAQgCWtPC68BABx8GsqZBwaASskv8fIpOZCcpZAN5pMmB1yihCLY3HHm3nt4HZCzTGZBFZAJ5E8bvttELSqIZCP8kM3I0pAn7gxShQRRzPpGj7oA0mbKzT1188hq0prcBoG8QWfHC6WZAIzQnfl4gyBwMZAlXhzh4H5xfmOmhErnGhwZDZD')
 
 app = Flask(__name__)
 
@@ -25,13 +25,17 @@ def webhook():
 
         # bot.send(Message(fbid, 'Hello dunia.'))
 
-        home_buttons  = [Button('postback', 'Home', payload='home_button'), Button('postback', 'Exit', payload='exit_button')]
-        home_template = ButtonTemplate(text='Habari Dunia', buttons=home_buttons)
+        try:
 
-        code, text = bot.send(Message(fbid, home_template))
-        print(code, text)
-        
-        return "OK", 200
+            home_buttons  = [PostbackButton('Home', payload='home_button'), PostbackButton('Exit', payload='exit_button')]
+            home_template = ButtonTemplate(text='Habari Dunia', buttons=home_buttons)
+
+            code, text = bot.send(MessageWidget(fbid, home_template))
+            print(code, text)
+        except Exception as ex:
+            print(ex)
+        finally:
+            return "OK", 200
 
 if __name__ == '__main__':
     app.run(debug=True)

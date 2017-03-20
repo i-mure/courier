@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import pprint
 import logging
 import requests
 
@@ -9,6 +10,7 @@ from .errors import CourierRequestError
 
 def serialize_(payload):
 
+    print('Serializing: ', payload)
     if isinstance(payload, list):
         payload = list(map(serialize_, payload))
 
@@ -60,6 +62,9 @@ class Messenger:
         payload = serialize_(obj)
         payload = dumps(payload)
 
+        print('Sending Message with payload: ')
+        print(payload)
+
         try:
             status = requests.post(self.post_url, data=payload, headers=HEADERS_JSON)
         except requests.exceptions.RequestException as e:
@@ -83,4 +88,33 @@ class Messenger:
 
 
 
-        
+class MessengerRequest:
+
+    def __init__(self, obj):
+        self._obj = obj
+
+        # Entry is the first messaging entry that we get
+        # fbid is the FacebookId
+
+        self.entry = data['entry'][0]['messaging'][0]
+        self.fbid  = self.entry['sender']['id']
+
+        # Get the message type
+        self.is_referral = entry.get('referral', False)
+        self.is_postback = entry.get('postback', False)
+        self.is_message  = entry.get('message',  False)
+
+        if self.is_referral:
+            self.message = entry['referral']['ref']
+
+        if self.is_postback:
+            self.message = entry['postback']['payload']
+
+        if self.is_message:
+            payload = self.entry[0]
+            if payload.get('attachments', False):
+                self.attachments   = entry['message']['attachments']
+                self.is_attachment = True
+            else:
+                self.message = entry['message']['text']
+

@@ -5,7 +5,6 @@ All the errors raised/used by Courier.
 
 """
 
-
 class CourierError(Exception):
 	"""
 	Base exception for the courier library
@@ -18,4 +17,8 @@ class CourierError(Exception):
 
 
 class CourierRequestError(CourierError):
+	pass
+
+
+class TemplateError(CourierError):
 	pass

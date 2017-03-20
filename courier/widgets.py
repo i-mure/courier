@@ -20,6 +20,22 @@ class Message(CourierWidget):
 			}
 		}
 
+class MessageWidget:
+    def __init__(self, fbid, message):
+        self.fbid = fbid
+        self.message = message
+
+    def to_json(self):
+        message = self.message.to_json()
+        payload = {
+            'recipient': {
+                'id': self.fbid
+            }, 
+            'message': {}
+        }
+        payload['message'].update(self.message.to_json())
+        return payload
+
 class Button:
     """
     Creates a button element can be of any type with any arguments
