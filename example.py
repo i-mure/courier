@@ -20,10 +20,9 @@ def webhook():
     if request.method == 'POST':
         data  = json.loads(request.data.decode('utf-8'))
 
-        entry = data['entry'][0]['messaging'][0]
-        fbid    = entry['sender']['id']
+        botRequest = MessengerRequest(data)
 
-        # bot.send(Message(fbid, 'Hello dunia.'))
+        print(botRequest)
 
         try:
 

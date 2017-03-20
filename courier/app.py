@@ -96,13 +96,13 @@ class MessengerRequest:
         # Entry is the first messaging entry that we get
         # fbid is the FacebookId
 
-        self.entry = data['entry'][0]['messaging'][0]
+        self.entry = self._obj['entry'][0]['messaging'][0]
         self.fbid  = self.entry['sender']['id']
 
         # Get the message type
-        self.is_referral = entry.get('referral', False)
-        self.is_postback = entry.get('postback', False)
-        self.is_message  = entry.get('message',  False)
+        self.is_referral = self.entry.get('referral', False)
+        self.is_postback = self.entry.get('postback', False)
+        self.is_message  = self.entry.get('message',  False)
 
         if self.is_referral:
             self.message = entry['referral']['ref']
