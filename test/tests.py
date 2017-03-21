@@ -224,6 +224,8 @@ class ButtonTemplateTests(unittest.TestCase):
     def test_button_template(self):
         self.assertEqual(serialize_(self._template.to_json()), self._template_string)
 
+
+
 if __name__ == '__main__':
     test_cases_to_run = [ButtonWidgetTests, ShareButtonWidgetTests, UnlinkAccountWidgetTests,
                          LoginButtonWidgetTests, CallButtonWidgetTests, PostbackButtonWidgetTests,
