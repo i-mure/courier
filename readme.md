@@ -6,15 +6,18 @@
 
 `pip install pycourier`
 
-### Import the messenger class
 
-`from courier import Messenger`
-`bot = Messenger(os.environ.get('FB_TOKEN')) #put facebook token here`
-
-`from courier.widgets import Message`
-`bot.send(Message(fbid, 'Hello Dunia'))`
+```python
 
 
+from courier import Messenger`
+bot = Messenger(os.environ.get('FB_TOKEN')) #put facebook token here`
+
+from courier.widgets import Message
+
+bot.send(Message(fbid, 'Hello Dunia'))
+
+```
 ## License
 
 MIT © [Isaiah Mureithi]

@@ -289,6 +289,18 @@ class DefaultAction:
         self.web_view_ratio = web_view_ratio
         self.fallback_url = fallback_url
 
+    def to_json(self):
+        json = {
+            "type": self.type,
+            "messenger_extensions": self.messenger_extensions,
+            "webview_height_ratio": self.web_view_ratio
+        }
+        if self.type == self.TYPE_WEB_URL :
+            json["url"] = self.url
+            json["fallback_url"] = self.fallback_url if self.fallback_url is not None else self.url
+
+        return json
+
 
 class ListItem:
     """"
@@ -308,22 +320,9 @@ class ListItem:
             "title": self.title
         }
         if self.subtitle is not None: json["subtitle"] = self.subtitle
-        if self.default_action is not None: json["default_action"] = self.default_action
-        if self.button is not None: json["button"] = [self.button]
+        if self.default_action is not None: json["default_action"] = self.default_action.to_json()
+        if self.button is not None: json["button"] = [self.button.to_json()]
         if self.image_url is not None: json["image_url"] = self.image_url
-        return json
-
-
-    def to_json(self):
-        json = {
-            "type": self.type,
-            "messenger_extensions": self.messenger_extensions,
-            "webview_height_ratio": self.web_view_ratio
-        }
-        if self.type == self.TYPE_WEB_URL :
-            json["url"] = self.url
-            json["fallback_url"] = self.fallback_url if self.fallback_url is not None else self.url
-
         return json
 
 
