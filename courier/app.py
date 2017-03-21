@@ -9,8 +9,6 @@ from .constants import FB_URL,FB_USER_URL, HEADERS_JSON
 from .errors import CourierRequestError
 
 def serialize_(payload):
-
-    print('Serializing: ', payload)
     if isinstance(payload, list):
         payload = list(map(serialize_, payload))
 

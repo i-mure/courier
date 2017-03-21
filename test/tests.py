@@ -4,24 +4,8 @@ import sys
 
 sys.path.append(os.path.realpath(os.path.dirname(__file__) + "/.."))
 
-from courier import widgets
-
-class TestStringMethods(unittest.TestCase):
-
-    def test_upper(self):
-        self.assertEqual('foo'.upper(), 'FOO')
-
-    def test_isupper(self):
-        self.assertTrue('FOO'.isupper())
-        self.assertFalse('Foo'.isupper())
-
-    def test_split(self):
-        s = 'hello world'
-        self.assertEqual(s.split(), ['hello', 'world'])
-        # check that s.split fails when the separator is not a string
-        with self.assertRaises(TypeError):
-            s.split(2)
-
+from courier import widgets, templates
+from courier.app import serialize_
 
 class ButtonWidgetTests(unittest.TestCase):
 
@@ -184,16 +168,70 @@ class URLButtonWidgetTests(unittest.TestCase):
 
 
 class BuyButtonWidgetTests(unittest.TestCase):
-    """Need to implement this test
     """
+    Need to implement this test
+    """
+    pass
+
+class GenericTemplateTests(unittest.TestCase):
+    def setUp(self):
+        self._template = templates.GenericTemplate('Test template', 'https://item-url.com', 'https://item-url.com/img.jpg', 'Test Subtitle', 
+                                                    [widgets.PostbackButton('Hello', 'Hello')])
+        self._template_string = {
+                                    'attachment': {
+                                        'type': 'template',
+                                        'elements': [{
+                                            'title': 'Test template',
+                                            'item_url': 'https://item-url.com',
+                                            'image_url': 'https://item-url.com/img.jpg',
+                                            'subtitle': 'Test Subtitle',
+                                            'buttons': [
+                                                {
+                                                    'title': 'Hello',
+                                                    'type': 'postback',
+                                                    'payload': 'Hello'
+                                                }
+                                            ]
+                                        }]
+                                    }
+                                }
+
+    def test_generic_template(self):
+        self.assertEqual(serialize_(self._template.to_json()), self._template_string)
+
+class ButtonTemplateTests(unittest.TestCase):
+    def setUp(self):
+        self._template = templates.ButtonTemplate('Test Buttons', [widgets.PostbackButton('Hello', 'Hello')])
+
+        self._template_string = {
+            'attachment': {
+                'type': 'template',
+                'payload': {
+                    'template_type': 'button',
+                    'text': 'Test Buttons',
+                    'buttons':  [
+                        {
+                            'title': 'Hello',
+                            'type': 'postback',
+                            'payload': 'Hello'
+                        }
+                    ]
+                }
+            }
+        }
 
 
+    def test_button_template(self):
+        self.assertEqual(serialize_(self._template.to_json()), self._template_string)
 
 if __name__ == '__main__':
     test_cases_to_run = [ButtonWidgetTests, ShareButtonWidgetTests, UnlinkAccountWidgetTests,
                          LoginButtonWidgetTests, CallButtonWidgetTests, PostbackButtonWidgetTests,
-                         URLButtonWidgetTests]
+                         URLButtonWidgetTests, 
+
+                         # Template Tests
+                         GenericTemplateTests, ButtonTemplateTests]
 
     for test_case in test_cases_to_run:
         suite = unittest.TestLoader().loadTestsFromTestCase(test_case)
-        unittest.TextTestRunner(verbosity=2).run(suite)
+        unittest.TextTestRunner(verbosity=2).run(suite) 
